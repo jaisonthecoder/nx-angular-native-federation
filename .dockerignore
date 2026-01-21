@@ -3,10 +3,9 @@ node_modules
 npm-debug.log
 yarn-error.log
 yarn.lock
-package-lock.json
 
 # Build outputs
-dist
+dist/apps
 tmp
 .angular
 .nx
