@@ -1,0 +1,11 @@
+{
+  "name": "@angola-workspace/shared-ui-components",
+  "version": "1.0.0",
+  "peerDependencies": {
+    "@angular/common": "^20.1.0",
+    "@angular/core": "^20.1.0"
+  }
+}
+
+
+

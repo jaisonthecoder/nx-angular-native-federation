@@ -1,0 +1,6 @@
+{
+  "name": "@angola-workspace/jul-portal",
+  "version": "1.0.0",
+  "description": "Shell/Host application for Native Federation",
+  "private": true
+}

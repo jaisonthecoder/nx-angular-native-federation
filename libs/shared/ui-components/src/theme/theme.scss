@@ -1,0 +1,120 @@
+/* ============================================
+   Runtime Theme - Main Entry Point
+   This file combines all theme partials
+   Compiled output will be loaded at runtime
+   ============================================ */
+
+// Import theme partials using modern @use (must be first)
+@use 'variables';
+@use 'base';
+@use 'components';
+
+// Import Tailwind base, components, utilities
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   Custom Tailwind Layers
+   ============================================ */
+
+@layer components {
+  /* Sidebar specific styles */
+  .sidebar {
+    background: rgb(var(--card));
+    border-right: 1px solid rgb(var(--border));
+    height: 100%;
+    width: var(--sidebar-width);
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-lg);
+    transition: width var(--transition-normal);
+
+    &.collapsed {
+      width: var(--sidebar-collapsed-width);
+    }
+  }
+
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin: 0.125rem var(--spacing-sm);
+    color: rgb(var(--foreground));
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+
+    &:hover {
+      background: rgba(var(--color-primary-50), 0.5);
+      color: rgb(var(--color-primary-700));
+    }
+
+    &.active {
+      background: rgba(var(--color-primary-500), 0.15);
+      color: rgb(var(--color-primary-700));
+      font-weight: var(--font-semibold);
+    }
+  }
+
+  .dark .sidebar-item {
+    &:hover {
+      background: rgba(var(--color-primary-900), 0.5);
+      color: rgb(var(--color-primary-300));
+    }
+
+    &.active {
+      background: rgba(var(--color-primary-500), 0.2);
+      color: rgb(var(--color-primary-300));
+    }
+  }
+
+  /* Header specific styles */
+  .app-header {
+    background: rgb(var(--card));
+    border-bottom: 1px solid rgb(var(--border));
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    z-index: var(--z-sticky);
+  }
+
+  /* Breadcrumb styles */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--text-sm);
+    color: rgb(var(--muted-foreground));
+
+    .breadcrumb-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+
+      &:not(:last-child)::after {
+        content: '/';
+        margin-left: var(--spacing-xs);
+        color: rgb(var(--muted-foreground));
+      }
+
+      a {
+        color: rgb(var(--muted-foreground));
+
+        &:hover {
+          color: rgb(var(--color-primary-600));
+        }
+      }
+
+      &:last-child {
+        color: rgb(var(--foreground));
+        font-weight: var(--font-medium);
+      }
+    }
+  }
+}

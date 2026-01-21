@@ -1,0 +1,149 @@
+{
+  "name": "jul-portal",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/shell-apps/jul-portal/src",
+  "tags": [
+    "type:shell",
+    "scope:material"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@angular-architects/native-federation:build",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {},
+      "configurations": {
+        "production": {
+          "target": "jul-portal:esbuild:production"
+        },
+        "development": {
+          "target": "jul-portal:esbuild:development",
+          "dev": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-architects/native-federation:build",
+      "options": {
+        "target": "jul-portal:serve-original:development",
+        "buildNotifications": {
+          "enable": true
+        },
+        "rebuildDelay": 0,
+        "dev": true,
+        "port": 0
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular/build:extract-i18n",
+      "options": {
+        "buildTarget": "jul-portal:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "jul-portal:build",
+        "staticFilePath": "dist/apps/shell-apps/jul-portal/browser",
+        "spa": true
+      }
+    },
+    "esbuild": {
+      "executor": "@angular/build:application",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/apps/shell-apps/jul-portal",
+        "index": "apps/shell-apps/jul-portal/src/index.html",
+        "browser": "apps/shell-apps/jul-portal/src/main.ts",
+        "polyfills": [
+          "zone.js",
+          "es-module-shims"
+        ],
+        "tsConfig": "apps/shell-apps/jul-portal/tsconfig.app.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/shell-apps/jul-portal/public"
+          }
+        ],
+        "styles": [
+          "apps/shell-apps/jul-portal/src/styles.scss"
+        ],
+        "scripts": [],
+        "stylePreprocessorOptions": {
+          "includePaths": [
+            "libs/shared/ui-components/src"
+          ]
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kB",
+              "maximumError": "1MB"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve-original": {
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "jul-portal:esbuild:production"
+        },
+        "development": {
+          "buildTarget": "jul-portal:esbuild:development"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4200
+      }
+    },
+    "test": {
+      "executor": "@angular/build:karma",
+      "options": {
+        "polyfills": [
+          "zone.js",
+          "zone.js/testing"
+        ],
+        "tsConfig": "apps/shell-apps/jul-portal/tsconfig.spec.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/shell-apps/jul-portal/public"
+          }
+        ],
+        "styles": [
+          "apps/shell-apps/jul-portal/src/styles.scss"
+        ],
+        "scripts": [],
+        "stylePreprocessorOptions": {
+          "includePaths": [
+            "libs/shared/ui-components/src"
+          ]
+        }
+      }
+    }
+  }
+}

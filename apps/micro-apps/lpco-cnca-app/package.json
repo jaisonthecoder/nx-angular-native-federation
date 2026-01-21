@@ -1,0 +1,6 @@
+{
+  "name": "@angola-workspace/lpco-cnca-app",
+  "version": "1.0.0",
+  "description": "Remote microfrontend for Native Federation",
+  "private": true
+}

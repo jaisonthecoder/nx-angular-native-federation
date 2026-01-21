@@ -1,0 +1,81 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed">
+  <!-- Sidebar Header -->
+  <div class="sidebar-header">
+    <button class="collapse-btn" (click)="toggleSidebar()" aria-label="Toggle sidebar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M15 18l-6-6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Navigation Menu -->
+  <nav class="sidebar-nav">
+    <ul class="menu-list">
+      <li *ngFor="let item of menuItems" class="menu-item">
+        <!-- Menu item with children (expandable) -->
+        <div *ngIf="item.children" class="menu-item-wrapper">
+          <button
+            class="menu-link expandable"
+            [class.expanded]="item.isExpanded"
+            (click)="toggleMenuItem(item)"
+            [attr.aria-expanded]="item.isExpanded"
+          >
+            <svg class="menu-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path [attr.d]="getIconPath(item.icon)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="menu-label">{{ item.label }}</span>
+            <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="m9 18 6-6-6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <!-- Submenu -->
+          <ul class="submenu" *ngIf="item.isExpanded" [@slideDown]>
+            <li *ngFor="let child of item.children" class="submenu-item">
+              <a
+                class="menu-link submenu-link"
+                [routerLink]="child.route"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: false}"
+              >
+                <svg class="menu-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path [attr.d]="getIconPath(child.icon)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="menu-label">{{ child.label }}</span>
+                <span class="badge" *ngIf="child.badge">{{ child.badge }}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Menu item without children (direct link) -->
+        <a
+          *ngIf="!item.children"
+          class="menu-link"
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: false}"
+        >
+          <svg class="menu-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path [attr.d]="getIconPath(item.icon)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="menu-label">{{ item.label }}</span>
+          <span class="badge" *ngIf="item.badge">{{ item.badge }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Sidebar Footer -->
+  <div class="sidebar-footer">
+    <div class="help-card" *ngIf="!isCollapsed">
+      <svg class="help-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <circle cx="12" cy="12" r="10" stroke-width="2"/>
+        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3 M12 17h.01" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <h4>Need Help?</h4>
+      <p>Contact support for assistance</p>
+      <button class="help-btn">Get Help</button>
+    </div>
+  </div>
+</aside>

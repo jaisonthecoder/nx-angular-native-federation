@@ -1,0 +1,99 @@
+# ========================================
+# OPTIMIZED DOCKERFILE WITH LAYER CACHING
+# ========================================
+# This is an improved version with better caching strategy
+# Use this template for better build performance
+
+# ========================================
+# Stage 1: Install Dependencies
+# ========================================
+FROM node:18-alpine AS deps
+
+WORKDIR /app
+
+# Copy only package files first for better caching
+COPY package*.json ./
+COPY nx.json ./
+
+# This layer is cached unless package files change
+RUN npm ci --legacy-peer-deps --prefer-offline
+
+# ========================================
+# Stage 2: Copy Workspace Configuration
+# ========================================
+FROM deps AS workspace
+
+WORKDIR /app
+
+# Copy workspace configuration
+COPY tsconfig.base.json ./
+COPY tailwind.config.ts ./
+COPY postcss.config.js ./
+COPY eslint.config.mjs ./
+
+# ========================================
+# Stage 3: Build Shared Libraries
+# ========================================
+FROM workspace AS build-libs
+
+WORKDIR /app
+
+# Copy ONLY shared libraries source
+COPY libs/ ./libs/
+
+# Build shared libraries
+# This layer is cached unless libs/ changes
+RUN npx nx run-many --target=build \
+    --projects=shared-models,shared-ui-components,shared-data-access \
+    --configuration=production
+
+# ========================================
+# Stage 4: Build Shell Application
+# ========================================
+FROM build-libs AS build-app
+
+WORKDIR /app
+
+# Copy only the specific app we're building
+# This layer is cached unless this app changes
+COPY apps/shell-apps/jul-portal ./apps/shell-apps/jul-portal
+
+# Build jul-portal
+# This uses the shared libraries from previous stage
+RUN npx nx build jul-portal --configuration=production
+
+# ========================================
+# Stage 5: Production - Nginx
+# ========================================
+FROM nginx:alpine AS production
+
+# Install curl for health checks
+RUN apk add --no-cache curl
+
+# Copy nginx configuration
+COPY docker/nginx/shell.conf /etc/nginx/conf.d/default.conf
+
+# Copy built application from build stage
+COPY --from=build-app /app/dist/apps/shell-apps/jul-portal /usr/share/nginx/html
+
+# Copy environment script for runtime configuration
+COPY docker/shell-apps/jul-portal/env.sh /docker-entrypoint.d/40-env.sh
+RUN chmod +x /docker-entrypoint.d/40-env.sh
+
+# Labels for tracking
+ARG BUILD_DATE
+ARG VCS_REF
+ARG VERSION
+LABEL maintainer="Angola Platform Team" \
+      app="jul-portal" \
+      type="shell-app" \
+      version="${VERSION}" \
+      build-date="${BUILD_DATE}" \
+      vcs-ref="${VCS_REF}"
+
+EXPOSE 80
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost/health || exit 1
+
+CMD ["nginx", "-g", "daemon off;"]

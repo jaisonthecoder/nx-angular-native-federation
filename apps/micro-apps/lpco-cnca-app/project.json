@@ -1,0 +1,136 @@
+{
+  "name": "lpco-cnca-app",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/micro-apps/lpco-cnca-app/src",
+  "tags": [
+    "type:remote",
+    "scope:material"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@angular-architects/native-federation:build",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {},
+      "configurations": {
+        "production": {
+          "target": "lpco-cnca-app:esbuild:production"
+        },
+        "development": {
+          "target": "lpco-cnca-app:esbuild:development",
+          "dev": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-architects/native-federation:build",
+      "options": {
+        "target": "lpco-cnca-app:serve-original:development",
+        "rebuildDelay": 0,
+        "dev": true,
+        "port": 0
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular/build:extract-i18n",
+      "options": {
+        "buildTarget": "lpco-cnca-app:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "lpco-cnca-app:build",
+        "staticFilePath": "dist/apps/micro-apps/lpco-cnca-app/browser",
+        "spa": true
+      }
+    },
+    "esbuild": {
+      "executor": "@angular/build:application",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/apps/micro-apps/lpco-cnca-app",
+        "index": "apps/micro-apps/lpco-cnca-app/src/index.html",
+        "browser": "apps/micro-apps/lpco-cnca-app/src/main.ts",
+        "polyfills": [
+          "zone.js",
+          "es-module-shims"
+        ],
+        "tsConfig": "apps/micro-apps/lpco-cnca-app/tsconfig.app.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/micro-apps/lpco-cnca-app/public"
+          }
+        ],
+        "styles": [
+          "apps/micro-apps/lpco-cnca-app/src/styles.scss"
+        ],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kB",
+              "maximumError": "1MB"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve-original": {
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "lpco-cnca-app:esbuild:production"
+        },
+        "development": {
+          "buildTarget": "lpco-cnca-app:esbuild:development"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4202
+      }
+    },
+    "test": {
+      "executor": "@angular/build:karma",
+      "options": {
+        "polyfills": [
+          "zone.js",
+          "zone.js/testing"
+        ],
+        "tsConfig": "apps/micro-apps/lpco-cnca-app/tsconfig.spec.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/micro-apps/lpco-cnca-app/public"
+          }
+        ],
+        "styles": [
+          "apps/micro-apps/lpco-cnca-app/src/styles.scss"
+        ],
+        "scripts": []
+      }
+    }
+  }
+}

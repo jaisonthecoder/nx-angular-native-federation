@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  # ========================================
+  # Shell Application - jul-portal
+  # ========================================
+  jul-portal:
+    image: ${REGISTRY}/angola/jul-portal:${VERSION:-latest}
+    container_name: angola-shell-jul-portal-prod
+    ports:
+      - "4200:80"
+    environment:
+      - LPCO_CNCA_URL=${LPCO_CNCA_URL}
+      - NODE_ENV=production
+    networks:
+      - angola-net
+    depends_on:
+      - lpco-cnca-app
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ========================================
+  # Micro-App - lpco-cnca-app
+  # ========================================
+  lpco-cnca-app:
+    image: ${REGISTRY}/angola/lpco-cnca-app:${VERSION:-latest}
+    container_name: angola-microapp-lpco-cnca-prod
+    ports:
+      - "4202:80"
+    environment:
+      - API_URL=${API_URL}
+      - NODE_ENV=production
+    networks:
+      - angola-net
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  angola-net:
+    driver: bridge
+    name: angola-platform-network-prod
+

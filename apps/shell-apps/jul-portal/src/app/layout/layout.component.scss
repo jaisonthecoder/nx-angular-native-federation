@@ -1,0 +1,133 @@
+@use 'theme/variables' as *;
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: rgb(var(--color-neutral-50));
+}
+
+.main-container {
+  display: flex;
+  flex: 1;
+  position: relative;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0; // Prevents flex item from overflowing
+  overflow-x: hidden;
+}
+
+.main-content {
+  flex: 1;
+  padding: var(--spacing-xl);
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.breadcrumb-container {
+  margin-bottom: var(--spacing-lg);
+}
+
+.breadcrumb {
+  ol {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: var(--text-sm);
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    color: rgb(var(--color-neutral-600));
+
+    &:not(:last-child)::after {
+      content: '›';
+      margin-left: var(--spacing-sm);
+      color: rgb(var(--color-neutral-400));
+      font-size: var(--text-base);
+    }
+
+    &[aria-current='page'] {
+      color: rgb(var(--color-primary-600));
+      font-weight: var(--font-medium);
+    }
+
+    a {
+      color: rgb(var(--color-neutral-600));
+      text-decoration: none;
+      transition: color var(--transition-fast);
+
+      &:hover {
+        color: rgb(var(--color-primary-600));
+      }
+    }
+  }
+}
+
+.page-content {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--spacing-xl);
+  min-height: 500px;
+}
+
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: var(--header-height, 64px);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Responsive
+@media (max-width: 1024px) {
+  .main-content {
+    padding: var(--spacing-lg);
+  }
+
+  .page-content {
+    padding: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: var(--spacing-md);
+  }
+
+  .page-content {
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+  }
+
+  .mobile-overlay {
+    display: block;
+  }
+
+  .breadcrumb-container {
+    margin-bottom: var(--spacing-md);
+  }
+}

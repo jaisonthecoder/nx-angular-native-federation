@@ -1,0 +1,123 @@
+@use 'theme/variables' as *;
+
+.app-footer {
+  background: white;
+  border-top: 1px solid rgb(var(--color-neutral-200));
+  padding: var(--spacing-lg) var(--spacing-xl);
+  margin-top: auto;
+}
+
+.footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex: 0 0 auto;
+}
+
+.copyright {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: rgb(var(--color-neutral-600));
+}
+
+.version {
+  padding: 2px 8px;
+  background: rgb(var(--color-neutral-100));
+  color: rgb(var(--color-neutral-600));
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  border-radius: var(--radius-md);
+}
+
+.footer-center {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.footer-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.footer-link {
+  font-size: var(--text-sm);
+  color: rgb(var(--color-neutral-600));
+  text-decoration: none;
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: rgb(var(--color-primary-600));
+  }
+}
+
+.separator {
+  color: rgb(var(--color-neutral-400));
+  font-size: var(--text-sm);
+}
+
+.footer-right {
+  flex: 0 0 auto;
+}
+
+.social-links {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: rgb(var(--color-neutral-500));
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+
+  &:hover {
+    color: rgb(var(--color-primary-600));
+    background: rgb(var(--color-primary-50));
+  }
+}
+
+// Responsive
+@media (max-width: 1024px) {
+  .footer-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-left,
+  .footer-center,
+  .footer-right {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-footer {
+    padding: var(--spacing-md) var(--spacing-lg);
+  }
+
+  .footer-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .copyright {
+    font-size: var(--text-xs);
+  }
+}

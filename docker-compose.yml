@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # ========================================
+  # Shell Application - jul-portal
+  # ========================================
+  jul-portal:
+    build:
+      context: .
+      dockerfile: docker/shell-apps/jul-portal/Dockerfile
+    container_name: angola-shell-jul-portal
+    ports:
+      - "4200:80"
+    environment:
+      - LPCO_CNCA_URL=http://localhost:4202
+    networks:
+      - angola-net
+    depends_on:
+      - lpco-cnca-app
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ========================================
+  # Micro-App - lpco-cnca-app
+  # ========================================
+  lpco-cnca-app:
+    build:
+      context: .
+      dockerfile: docker/micro-apps/lpco-cnca-app/Dockerfile
+    container_name: angola-microapp-lpco-cnca
+    ports:
+      - "4202:80"
+    environment:
+      - API_URL=http://localhost:3000/api
+    networks:
+      - angola-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  angola-net:
+    driver: bridge
+    name: angola-platform-network
+
+
+
