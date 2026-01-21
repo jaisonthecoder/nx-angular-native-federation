@@ -38,6 +38,9 @@ module.exports = withNativeFederation({
     'rxjs/fetch',
     'rxjs/testing',
     'rxjs/webSocket',
+    // Skip workspace shared libraries - load them directly
+    p => p.startsWith('@angola-workspace/'),
+    p => p.startsWith('@angola-platform/'),
     // Skip dev and build packages
     p => p.startsWith('@angular-devkit/'),
     p => p.startsWith('@angular/build'),

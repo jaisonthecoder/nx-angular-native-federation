@@ -1,4 +1,7 @@
-/* Import shared Tailwind styles */
+/* Import local theme */
+@use 'theme/theme';
+
+/* Import shared UI component styles */
 @use '../../../../libs/shared/ui-components/src/styles.scss' as *;
 
 

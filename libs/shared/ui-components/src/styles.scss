@@ -3,8 +3,9 @@
    Used for component development and exports
    ============================================ */
 
-// Import the complete runtime theme
-@import 'theme/theme';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer components {
   /* Button variants - ERP Compact */

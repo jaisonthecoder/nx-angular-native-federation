@@ -82,7 +82,7 @@
         "scripts": [],
         "stylePreprocessorOptions": {
           "includePaths": [
-            "libs/shared/ui-components/src"
+            "apps/shell-apps/jul-portal/src"
           ]
         }
       },
@@ -140,7 +140,7 @@
         "scripts": [],
         "stylePreprocessorOptions": {
           "includePaths": [
-            "libs/shared/ui-components/src"
+            "apps/shell-apps/jul-portal/src"
           ]
         }
       }

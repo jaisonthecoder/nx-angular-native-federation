@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   template: `
     <div style="padding: 2rem; max-width: 800px; margin: 0 auto;">
-      <h1>LPCO CNCA Micro-App</h1>
+      <h1 class="common_header">LPCO CNCA Micro-App</h1>
       <p>License, Permit, Certificate, and Other authorizations</p>
 
       <div style="margin-top: 2rem; padding: 1rem; background: #f5f5f5; border-radius: 8px;">
