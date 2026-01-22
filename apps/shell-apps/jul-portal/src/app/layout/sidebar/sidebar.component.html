@@ -1,11 +1,14 @@
-<aside class="sidebar" [class.collapsed]="isCollapsed">
+<aside class="sidebar h-full" [class.collapsed]="isCollapsed">
+
+
   <!-- Sidebar Header -->
-  <div class="sidebar-header">
-    <button class="collapse-btn" (click)="toggleSidebar()" aria-label="Toggle sidebar">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path d="M15 18l-6-6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
+  <div class="sidebar-header bg-white">
+   <div *ngIf="!isCollapsed" class="w-full flex justify-center p-2">
+      <img src="assets/jul-logo.svg" alt="JUL Logo" class=" w-auto" />
+    </div>
+    <div *ngIf="isCollapsed" class=" rounded-full bg-white flex items-center justify-center">
+      <img src="assets/jul-logo-thumb.svg" alt="JUL" class="w-auto" />
+    </div>
   </div>
 
   <!-- Navigation Menu -->
@@ -66,16 +69,5 @@
     </ul>
   </nav>
 
-  <!-- Sidebar Footer -->
-  <div class="sidebar-footer">
-    <div class="help-card" *ngIf="!isCollapsed">
-      <svg class="help-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <circle cx="12" cy="12" r="10" stroke-width="2"/>
-        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3 M12 17h.01" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <h4>Need Help?</h4>
-      <p>Contact support for assistance</p>
-      <button class="help-btn">Get Help</button>
-    </div>
-  </div>
+
 </aside>

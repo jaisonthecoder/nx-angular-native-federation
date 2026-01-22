@@ -1,0 +1,6 @@
+{
+  "name": "@angola-workspace/demo-ui-component",
+  "version": "1.0.0",
+  "description": "Remote microfrontend for Native Federation",
+  "private": true
+}

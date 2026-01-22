@@ -1,30 +1,15 @@
-<header class="app-header">
+<header class="app-header w-100">
   <div class="header-left">
     <button class="menu-toggle" (click)="onMenuToggle()" aria-label="Toggle menu">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path d="M3 12h18M3 6h18M3 18h18" stroke-width="2" stroke-linecap="round"/>
-      </svg>
+      <img src="assets/global-icons/global-menu-icon.svg" alt="Menu" class="menu-icon" />
     </button>
 
-    <div class="logo">
-      <img src="assets/logo.svg" alt="JUL Logo" class="logo-img" />
+    <div class="service--title">
       <span class="logo-text">Licensing Services</span>
     </div>
   </div>
 
   <div class="header-center">
-    <div class="search-container">
-      <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <circle cx="11" cy="11" r="8" stroke-width="2"/>
-        <path d="m21 21-4.35-4.35" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-      <input
-        type="text"
-        class="search-input"
-        placeholder="Search services, applications..."
-        aria-label="Search"
-      />
-    </div>
   </div>
 
   <div class="header-right">

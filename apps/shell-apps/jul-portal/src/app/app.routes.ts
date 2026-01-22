@@ -21,4 +21,12 @@ export const appRoutes: Route[] = [
     path: 'unauthorized',
     loadComponent: () => import('./unauthorized/unauthorized.component').then(m => m.UnauthorizedComponent)
   }
+,
+  {
+    path: 'demo-ui-component',
+    loadComponent: () => loadRemoteModule('demo-ui-component', './Component').then(m => m.default || m.AppComponent || m.Component),
+    // Remote app can also be protected if needed
+    // canActivate: [authGuard],
+    // data: { roles: [] }
+  }
 ];

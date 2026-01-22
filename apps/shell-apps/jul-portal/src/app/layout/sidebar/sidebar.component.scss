@@ -11,7 +11,8 @@
   transition: width $transition-base, transform $transition-base;
   overflow: hidden;
   position: sticky;
-  top: $header-height;
+  top: 0;
+  height: 100%;
 
   &.collapsed {
     width: $sidebar-collapsed-width;
@@ -47,8 +48,11 @@
 .sidebar-header {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  padding: $spacing-md;
+  justify-content: center;
+  padding: 0;
+  height:  $header-height;
+  background-color: side;
+  overflow: hidden;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -125,13 +129,13 @@
   align-items: center;
   gap: $spacing-md;
   padding: $spacing-md;
-  color: white;
+  color: $color-neutral-50;
   text-decoration: none;
   font-size: $text-sm;
   font-weight: $font-medium;
   transition: all $transition-fast;
   cursor: pointer;
-  background: $sidebar-item-bg;
+  background:none;
   border: none;
   width: 100%;
   text-align: left;
@@ -140,7 +144,6 @@
   min-height: 48px;
 
   &:hover {
-    background: $sidebar-item-hover;
     transform: translateX(4px);
   }
 
@@ -153,7 +156,7 @@
 
 .menu-icon {
   flex-shrink: 0;
-  color: white;
+  color:$color-primary-450;
   transition: color $transition-fast;
 }
 

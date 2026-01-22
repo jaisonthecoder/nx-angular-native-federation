@@ -2,15 +2,25 @@
 
 .app-layout {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   min-height: 100vh;
+
   background: $color-neutral-50;
+}
+
+app-header{
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  height:  $header-height;
 }
 
 .main-container {
   display: flex;
   flex: 1;
   position: relative;
+
 }
 
 .content-wrapper {
@@ -19,6 +29,8 @@
   flex: 1;
   min-width: 0; // Prevents flex item from overflowing
   overflow-x: hidden;
+      padding-top: $header-height;
+
 }
 
 .main-content {

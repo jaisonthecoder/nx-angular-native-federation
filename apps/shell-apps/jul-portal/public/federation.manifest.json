@@ -1,3 +1,4 @@
 {
-  "lpco-cnca-app": "http://localhost:4202/remoteEntry.json"
+  "lpco-cnca-app": "http://localhost:4202/remoteEntry.json",
+  "demo-ui-component": "http://localhost:4204/remoteEntry.json"
 }

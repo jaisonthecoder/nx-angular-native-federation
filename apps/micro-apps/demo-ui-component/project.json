@@ -1,0 +1,136 @@
+{
+  "name": "demo-ui-component",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/micro-apps/demo-ui-component/src",
+  "tags": [
+    "type:remote",
+    "scope:material"
+  ],
+  "targets": {
+    "build": {
+      "executor": "@angular-architects/native-federation:build",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {},
+      "configurations": {
+        "production": {
+          "target": "demo-ui-component:esbuild:production"
+        },
+        "development": {
+          "target": "demo-ui-component:esbuild:development",
+          "dev": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-architects/native-federation:build",
+      "options": {
+        "target": "demo-ui-component:serve-original:development",
+        "rebuildDelay": 0,
+        "dev": true,
+        "port": 0
+      }
+    },
+    "extract-i18n": {
+      "executor": "@angular/build:extract-i18n",
+      "options": {
+        "buildTarget": "demo-ui-component:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "demo-ui-component:build",
+        "staticFilePath": "dist/apps/micro-apps/demo-ui-component/browser",
+        "spa": true
+      }
+    },
+    "esbuild": {
+      "executor": "@angular/build:application",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/apps/micro-apps/demo-ui-component",
+        "index": "apps/micro-apps/demo-ui-component/src/index.html",
+        "browser": "apps/micro-apps/demo-ui-component/src/main.ts",
+        "polyfills": [
+          "zone.js",
+          "es-module-shims"
+        ],
+        "tsConfig": "apps/micro-apps/demo-ui-component/tsconfig.app.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/micro-apps/demo-ui-component/public"
+          }
+        ],
+        "styles": [
+          "apps/micro-apps/demo-ui-component/src/styles.scss"
+        ],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kB",
+              "maximumError": "1MB"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve-original": {
+      "executor": "@angular/build:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "demo-ui-component:esbuild:production"
+        },
+        "development": {
+          "buildTarget": "demo-ui-component:esbuild:development"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4204
+      }
+    },
+    "test": {
+      "executor": "@angular/build:karma",
+      "options": {
+        "polyfills": [
+          "zone.js",
+          "zone.js/testing"
+        ],
+        "tsConfig": "apps/micro-apps/demo-ui-component/tsconfig.spec.json",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/micro-apps/demo-ui-component/public"
+          }
+        ],
+        "styles": [
+          "apps/micro-apps/demo-ui-component/src/styles.scss"
+        ],
+        "scripts": []
+      }
+    }
+  }
+}

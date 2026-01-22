@@ -51,3 +51,5 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Must use scss variables for colors and all possible values first check the variables and use them.
 -Always use scss latest features like `@use`, `@forward`, mixins, functions, and variables for styling.
 -Always use latest Tailwind CSS features for styling.
+-Must use tailwind classes for margin, padding, flexbox, grid, and other layout-related styles.
+-Dont use custom CSS for layout-related styles, always prefer Tailwind CSS classes.

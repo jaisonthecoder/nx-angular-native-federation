@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { LayoutComponent } from './layout/layout.component';
+import { NxWelcome } from './nx-welcome';
 
 @Component({
   standalone: true,
-  imports: [RouterModule, LayoutComponent],
+  imports: [NxWelcome, RouterModule],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
-  protected title = 'jul-portal';
+  protected title = 'demo-ui-component';
 }
 
 export { App as AppComponent };

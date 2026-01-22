@@ -1,5 +1,11 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# ========================================
+# IMPORTANT: scripts/ folder is for DEVELOPMENT TOOLS ONLY
+# It contains utilities for creating apps, Docker builds, etc.
+# These scripts are NOT part of the production build
+# ========================================
+
 # Compiled output
 /dist
 /tmp
@@ -82,3 +88,5 @@ docker-compose.override.yml
 *.bak
 *.swp
 *~.nib
+
+.angular

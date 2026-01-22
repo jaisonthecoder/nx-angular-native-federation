@@ -28,6 +28,9 @@ README.md
 dox
 *.md
 
+# Development scripts (not needed in production)
+scripts
+
 # Tests
 *.spec.ts
 e2e

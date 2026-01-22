@@ -359,7 +359,12 @@ async function main() {
             input: `${appPath}/public`
           }],
           styles: [`${appPath}/src/styles.scss`],
-          scripts: []
+          scripts: [],
+          ...(projectType.toLowerCase() === 'shell-app' ? {
+            stylePreprocessorOptions: {
+              includePaths: [`${appPath}/src`]
+            }
+          } : {})
         },
         configurations: {
           production: {
@@ -515,12 +520,12 @@ async function main() {
       // Determine which component file exists (check for standard Angular structure first)
       const appComponentPath = path.join(fullPath, 'src', 'app', 'app.component.ts');
       const appTsPath = path.join(fullPath, 'src', 'app', 'app.ts');
-      let componentFile = 'app.component.ts'; // Default to standard structure
+      let componentFile = 'app.ts'; // Default to app.ts structure (current standard)
 
-      if (fs.existsSync(appComponentPath)) {
-        componentFile = 'app.component.ts';
-      } else if (fs.existsSync(appTsPath)) {
+      if (fs.existsSync(appTsPath)) {
         componentFile = 'app.ts';
+      } else if (fs.existsSync(appComponentPath)) {
+        componentFile = 'app.component.ts';
       }
 
       const federationConfig = `const { withNativeFederation, shareAll } = require("@angular-architects/native-federation/config");
@@ -537,17 +542,22 @@ module.exports = withNativeFederation({
       strictVersion: true,
       requiredVersion: "auto",
     }),
-    '@nf-test-workspace/shared/models': {
+    '@angola-workspace/shared/models': {
       singleton: true,
       strictVersion: false,
       requiredVersion: 'auto'
     },
-    '@nf-test-workspace/shared/ui-components': {
+    '@angola-workspace/shared/ui-components': {
       singleton: true,
       strictVersion: false,
       requiredVersion: 'auto'
     },
-    '@nf-test-workspace/shared/data-access': {
+    '@angola-workspace/shared/data-access': {
+      singleton: true,
+      strictVersion: false,
+      requiredVersion: 'auto'
+    },
+    '@angola-workspace/shared/auth': {
       singleton: true,
       strictVersion: false,
       requiredVersion: 'auto'
@@ -558,6 +568,9 @@ module.exports = withNativeFederation({
     'rxjs/fetch',
     'rxjs/testing',
     'rxjs/webSocket',
+    // Skip workspace shared libraries - load them directly
+    p => p.startsWith('@angola-workspace/'),
+    p => p.startsWith('@angola-platform/'),
     // Skip dev and build packages
     p => p.startsWith('@angular-devkit/'),
     p => p.startsWith('@angular/build'),
@@ -608,17 +621,23 @@ module.exports = withNativeFederation({
       strictVersion: true,
       requiredVersion: 'auto'
     }),
-    '@nf-test-workspace/shared/models': {
+    // Explicitly share Keycloak as singleton across micro-frontends
+    'keycloak-angular': {
+      singleton: true,
+      strictVersion: true,
+      requiredVersion: 'auto'
+    },
+    'keycloak-js': {
+      singleton: true,
+      strictVersion: true,
+      requiredVersion: 'auto'
+    },
+    '@angola-workspace/shared/models': {
       singleton: true,
       strictVersion: false,
       requiredVersion: 'auto'
     },
-    '@nf-test-workspace/shared/ui-components': {
-      singleton: true,
-      strictVersion: false,
-      requiredVersion: 'auto'
-    },
-    '@nf-test-workspace/shared/data-access': {
+    '@angola-workspace/shared/auth': {
       singleton: true,
       strictVersion: false,
       requiredVersion: 'auto'
@@ -629,6 +648,9 @@ module.exports = withNativeFederation({
     'rxjs/fetch',
     'rxjs/testing',
     'rxjs/webSocket',
+    // Skip workspace shared libraries - load them directly
+    p => p.startsWith('@angola-workspace/'),
+    p => p.startsWith('@angola-platform/'),
     // Skip dev and build packages
     p => p.startsWith('@angular-devkit/'),
     p => p.startsWith('@angular/build'),
@@ -1039,7 +1061,7 @@ export class HomeComponent implements OnInit {
           }
 
           // Add route
-          const routesMatch = routesContent.match(/export const \\w+Routes[^=]*=\\s*\\[/);
+          const routesMatch = routesContent.match(/export const \w+Routes[^=]*=\s*\[/);
           if (routesMatch) {
             const insertPos = routesMatch.index + routesMatch[0].length;
             const homeRoute = "\n  {\n    path: '',\n    component: HomeComponent,\n  },";
@@ -1050,7 +1072,7 @@ export class HomeComponent implements OnInit {
         fs.writeFileSync(routesPath, routesContent);
       } else {
         // Create app.routes.ts from scratch
-        const routesContent = \`import { Route } from '@angular/router';
+        const routesContent = `import { Route } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 
 export const appRoutes: Route[] = [
@@ -1059,7 +1081,7 @@ export const appRoutes: Route[] = [
     component: HomeComponent,
   },
 ];
-\`;
+`;
         fs.writeFileSync(routesPath, routesContent);
       }
 
@@ -1169,12 +1191,198 @@ initFederation('federation.manifest.json')
       console.log('\n6️⃣  Updating styles.scss...');
       const stylesPath = path.join(fullPath, 'src', 'styles.scss');
       if (fs.existsSync(stylesPath)) {
-        const stylesContent = `/* Import shared Tailwind styles */
+        let stylesContent;
+
+        if (!isMicroApp) {
+          // Shell app - include theme import
+          stylesContent = `/* Import local theme */
+@use 'theme/theme';
+
+/* Import shared UI component styles */
 @use '../../../../libs/shared/ui-components/src/styles.scss' as *;
 
 
 `;
+        } else {
+          // Micro app - only import shared styles
+          stylesContent = `/* Import shared Tailwind styles */
+@use '../../../../libs/shared/ui-components/src/styles.scss' as *;
+
+
+`;
+        }
         fs.writeFileSync(stylesPath, stylesContent);
+
+        // Create theme folder for shell apps
+        if (!isMicroApp) {
+          console.log('   ✓ Creating theme folder for shell app...');
+          const themePath = path.join(fullPath, 'src', 'theme');
+          if (!fs.existsSync(themePath)) {
+            fs.mkdirSync(themePath, { recursive: true });
+          }
+
+          // Create _variables.scss
+          const variablesContent = `/* ============================================
+   SCSS Variables - Theme System
+   These are SCSS variables that should be used in all component styles
+   ============================================ */
+
+/* ========== Brand Color System ========== */
+
+// Primary
+$color-primary-50: #f0f7fd;
+$color-primary-100: #e0effc;
+$color-primary-200: #c6e3f8;
+$color-primary-300: #a0d1f2;
+$color-primary-400: #74b9ea;
+$color-primary-500: #3066be;
+$color-primary-600: #2a59a6;
+$color-primary-700: #244c8e;
+$color-primary-800: #1e3f76;
+$color-primary-900: #18325e;
+$color-primary-950: #122546;
+
+// Secondary
+$color-secondary-50: #fff5f0;
+$color-secondary-100: #ffeae1;
+$color-secondary-200: #ffd5c3;
+$color-secondary-300: #ffbba0;
+$color-secondary-400: #ff9477;
+$color-secondary-500: #ff6b35;
+$color-secondary-600: #e6531e;
+$color-secondary-700: #cc4214;
+$color-secondary-800: #b3350f;
+$color-secondary-900: #992d0d;
+$color-secondary-950: #80260a;
+
+// Neutral
+$color-neutral-50: #fafafa;
+$color-neutral-100: #f5f5f5;
+$color-neutral-200: #e5e5e5;
+$color-neutral-300: #d4d4d4;
+$color-neutral-400: #a3a3a3;
+$color-neutral-500: #737373;
+$color-neutral-600: #525252;
+$color-neutral-700: #404040;
+$color-neutral-800: #262626;
+$color-neutral-900: #171717;
+$color-neutral-950: #0a0a0a;
+
+// Status colors
+$color-success: #059669;
+$color-warning: #f59e0b;
+$color-error: #dc2626;
+$color-info: #3b82f6;
+
+/* ========== CSS Custom Properties ========== */
+:root {
+  /* Colors */
+  --primary: 48 102 190; /* #3066be */
+  --secondary: 255 107 53; /* #ff6b35 */
+  --background: 250 250 250; /* #fafafa */
+  --foreground: 23 23 23; /* #171717 */
+  --card: 255 255 255;
+  --border: 229 229 229; /* #e5e5e5 */
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+
+  /* Sidebar */
+  --sidebar-width: 16rem;
+  --sidebar-collapsed-width: 4rem;
+}
+`;
+          fs.writeFileSync(path.join(themePath, '_variables.scss'), variablesContent);
+
+          // Create _base.scss
+          const baseContent = `/* ============================================
+   Base Styles - Global Resets and Defaults
+   ============================================ */
+
+@use 'variables' as *;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: rgb(var(--background));
+  color: rgb(var(--foreground));
+  line-height: 1.5;
+}
+`;
+          fs.writeFileSync(path.join(themePath, '_base.scss'), baseContent);
+
+          // Create _components.scss
+          const componentsContent = `/* ============================================
+   Component Styles
+   ============================================ */
+
+@use 'variables' as *;
+
+/* Sidebar Component */
+.sidebar {
+  background: rgb(var(--card));
+  border-right: 1px solid rgb(var(--border));
+  height: 100%;
+  width: var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+  transition: width var(--transition-normal);
+
+  &.collapsed {
+    width: var(--sidebar-collapsed-width);
+  }
+}
+`;
+          fs.writeFileSync(path.join(themePath, '_components.scss'), componentsContent);
+
+          // Create theme.scss
+          const themeContent = `/* ============================================
+   Runtime Theme - Main Entry Point
+   ============================================ */
+
+@use 'variables';
+@use 'base';
+@use 'components';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+`;
+          fs.writeFileSync(path.join(themePath, 'theme.scss'), themeContent);
+
+          console.log('   ✓ Created theme files (_variables.scss, _base.scss, _components.scss, theme.scss)');
+        }
       }
     }
 
