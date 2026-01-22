@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Native Federation Nx Workspace",
   "scripts": {
-       "ng": "ng",
+    "ng": "ng",
     "start": "echo 'No shell app configured. Use create:microapp to create apps.'",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=26384 nx build",
     "watch": "cross-env NODE_OPTIONS=--max-old-space-size=26384 nx build --watch --configuration development",
@@ -30,9 +30,10 @@
     "build:libs": "nx run-many --target=build --projects=shared-auth,shared-data-access,shared-models,shared-ui-components --parallel=4",
     "serve:all": "concurrently \"npm run serve:jul-portal\" \"npm run serve:lpco-cnca-app\" --names \"shell,micro\" --prefix-colors \"blue,green\"",
 
-
     "clean:nx": "powershell -Command \"Get-Process node -ErrorAction SilentlyContinue | Stop-Process -Force; Start-Sleep -Seconds 2; Remove-Item -Path '.nx' -Recurse -Force -ErrorAction SilentlyContinue; Remove-Item -Path 'node_modules\\.cache' -Recurse -Force -ErrorAction SilentlyContinue; Remove-Item -Path 'dist' -Recurse -Force -ErrorAction SilentlyContinue; Write-Host 'Cache cleared!'\"",
     "clean:full": "npm run clean:nx && rmdir /S /Q node_modules && npm install",
+
+    "dist:remove": "Remove-Item -Recurse -Force dist -ErrorAction SilentlyContinue",
 
     "create:microapp": "node scripts/create-microapp.js"
     },

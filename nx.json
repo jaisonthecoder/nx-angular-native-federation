@@ -14,7 +14,7 @@
   },
   "targetDefaults": {
     "build": {
-      "cache": true,
+      "cache": false,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"],
       "env": {
@@ -28,7 +28,7 @@
       }
     },
     "test": {
-      "cache": true
+      "cache": false
     },
     "@angular/build:application": {
       "cache": true,
@@ -53,7 +53,7 @@
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "test", "lint"],
+        "cacheableOperations": [],
         "env": {
           "NODE_OPTIONS": "--max-old-space-size=26384"
         }
