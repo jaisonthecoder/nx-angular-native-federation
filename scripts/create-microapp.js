@@ -1428,15 +1428,23 @@ body {
     const buildScript = `build:${projectName}`;
     const testScript = `test:${projectName}`;
     const versionScript = `version:${projectName}`;
+    const serveVerboseScript = `serve:${projectName}:verbose`;
+    const serveLogScript = `serve:${projectName}:log`;
+    const serveDebugScript = `serve:${projectName}:debug`;
+    const serveDebugLogScript = `serve:${projectName}:debug-log`;
 
     if (!rootPackageJson.scripts) {
       rootPackageJson.scripts = {};
     }
 
-    rootPackageJson.scripts[serveScript] = `nx serve ${projectName}`;
+    rootPackageJson.scripts[serveScript] = `nx serve ${projectName} --verbose --skip-nx-cache 2>&1`;
     rootPackageJson.scripts[buildScript] = `nx build ${projectName}`;
     rootPackageJson.scripts[testScript] = `nx test ${projectName}`;
     rootPackageJson.scripts[versionScript] = `cd ${appPath} && npm version`;
+    rootPackageJson.scripts[serveVerboseScript] = `nx serve ${projectName} --verbose --skip-nx-cache`;
+    rootPackageJson.scripts[serveLogScript] = `nx serve ${projectName} --verbose --skip-nx-cache 2>&1 | tee serve-full-log.txt`;
+    rootPackageJson.scripts[serveDebugScript] = `cross-env NX_VERBOSE_LOGGING=true nx serve ${projectName} --verbose --skip-nx-cache`;
+    rootPackageJson.scripts[serveDebugLogScript] = `cross-env NX_VERBOSE_LOGGING=true nx serve ${projectName} --verbose --skip-nx-cache 2>&1 | tee serve-full-log.txt`;
 
     fs.writeFileSync(rootPackageJsonPath, JSON.stringify(rootPackageJson, null, 2));
 

@@ -11,27 +11,30 @@
     "graph": "nx graph",
     "affected:build": "cross-env NODE_OPTIONS=--max-old-space-size=26384 nx affected --target=build",
     "affected:test": "cross-env NODE_OPTIONS=--max-old-space-size=26384 nx affected --target=test",
-    "create:microapp": "node scripts/create-microapp.js",
+
+
     "serve:jul-portal": "nx serve jul-portal --verbose --skip-nx-cache 2>&1",
     "build:jul-portal": "nx build jul-portal",
     "test:jul-portal": "nx test jul-portal",
     "version:jul-portal": "cd apps/shell-apps/jul-portal && npm version",
-    "serve:lpco-cnca-app": "nx serve lpco-cnca-app --verbose --skip-nx-cache 2>&1",
-    "build:lpco-cnca-app": "nx build lpco-cnca-app",
-    "test:lpco-cnca-app": "nx test lpco-cnca-app",
-    "version:lpco-cnca-app": "cd apps/micro-apps/lpco-cnca-app && npm version",
-    "serve:all": "concurrently \"npm run serve:jul-portal\" \"npm run serve:lpco-cnca-app\" --names \"shell,micro\" --prefix-colors \"blue,green\"",
-    "build:libs": "nx run-many --target=build --projects=shared-auth,shared-data-access,shared-models,shared-ui-components --parallel=4",
     "serve:jul-portal:verbose": "nx serve jul-portal --verbose --skip-nx-cache",
     "serve:jul-portal:log": "nx serve jul-portal --verbose --skip-nx-cache 2>&1 | tee serve-full-log.txt",
     "serve:jul-portal:debug": "cross-env NX_VERBOSE_LOGGING=true nx serve jul-portal --verbose --skip-nx-cache",
     "serve:jul-portal:debug-log": "cross-env NX_VERBOSE_LOGGING=true nx serve jul-portal --verbose --skip-nx-cache 2>&1 | tee serve-full-log.txt",
+
+    "serve:lpco-cnca-app": "nx serve lpco-cnca-app --verbose --skip-nx-cache 2>&1",
+    "build:lpco-cnca-app": "nx build lpco-cnca-app",
+    "test:lpco-cnca-app": "nx test lpco-cnca-app",
+    "version:lpco-cnca-app": "cd apps/micro-apps/lpco-cnca-app && npm version",
+
+    "build:libs": "nx run-many --target=build --projects=shared-auth,shared-data-access,shared-models,shared-ui-components --parallel=4",
+    "serve:all": "concurrently \"npm run serve:jul-portal\" \"npm run serve:lpco-cnca-app\" --names \"shell,micro\" --prefix-colors \"blue,green\"",
+
+
     "clean:nx": "powershell -Command \"Get-Process node -ErrorAction SilentlyContinue | Stop-Process -Force; Start-Sleep -Seconds 2; Remove-Item -Path '.nx' -Recurse -Force -ErrorAction SilentlyContinue; Remove-Item -Path 'node_modules\\.cache' -Recurse -Force -ErrorAction SilentlyContinue; Remove-Item -Path 'dist' -Recurse -Force -ErrorAction SilentlyContinue; Write-Host 'Cache cleared!'\"",
     "clean:full": "npm run clean:nx && rmdir /S /Q node_modules && npm install",
-    "serve:demo-ui-component": "nx serve demo-ui-component",
-    "build:demo-ui-component": "nx build demo-ui-component",
-    "test:demo-ui-component": "nx test demo-ui-component",
-    "version:demo-ui-component": "cd apps/micro-apps/demo-ui-component && npm version"
+
+    "create:microapp": "node scripts/create-microapp.js"
   },
   "workspaces": [
     "apps/*",
