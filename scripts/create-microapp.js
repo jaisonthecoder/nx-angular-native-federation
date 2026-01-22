@@ -1406,18 +1406,11 @@ body {
       fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
     }
 
-    // Step 8: Update tsconfig.base.json (only for TypeScript projects)
-    if (selectedFramework === 'angular' || creationType === 'clone' || creationType === 'copy') {
-      console.log('\n8️⃣  Updating tsconfig.base.json...');
-      const tsconfigBasePath = path.join(process.cwd(), 'tsconfig.base.json');
-      const tsconfigBase = JSON.parse(fs.readFileSync(tsconfigBasePath, 'utf8'));
-      const pathKey = `@angola-workspace/${projectName}/*`;
-      if (!tsconfigBase.compilerOptions.paths) {
-        tsconfigBase.compilerOptions.paths = {};
-      }
-      tsconfigBase.compilerOptions.paths[pathKey] = [`${appPath}/src/*`];
-      fs.writeFileSync(tsconfigBasePath, JSON.stringify(tsconfigBase, null, 2));
-    }
+    // Step 8: Skip tsconfig.base.json update
+    // Note: Micro-apps and shell-apps are standalone applications in a module federation setup.
+    // They don't need path mappings in tsconfig.base.json as they're not shared libraries.
+    // Path mappings with wildcards also cause Native Federation build failures.
+    console.log('\n8️⃣  Skipping tsconfig.base.json update (not needed for federated apps)...');
 
     // Step 9: Update package.json scripts
     console.log('\n9️⃣  Updating package.json scripts...');

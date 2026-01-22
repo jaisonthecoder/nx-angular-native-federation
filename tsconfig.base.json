@@ -41,9 +41,6 @@
       ],
       "@angola-workspace/shared/auth": [
         "libs/shared/auth/src/index.ts"
-      ],
-      "@angola-workspace/demo-ui-component/*": [
-        "apps/micro-apps/demo-ui-component/src/*"
       ]
     }
   },
