@@ -34,7 +34,9 @@
     "clean:nx": "powershell -Command \"Get-Process node -ErrorAction SilentlyContinue | Stop-Process -Force; Start-Sleep -Seconds 2; Remove-Item -Path '.nx' -Recurse -Force -ErrorAction SilentlyContinue; Remove-Item -Path 'node_modules\\.cache' -Recurse -Force -ErrorAction SilentlyContinue; Remove-Item -Path 'dist' -Recurse -Force -ErrorAction SilentlyContinue; Write-Host 'Cache cleared!'\"",
     "clean:full": "npm run clean:nx && rmdir /S /Q node_modules && npm install",
 
-    "create:microapp": "node scripts/create-microapp.js"
+    "create:microapp": "node scripts/create-microapp.js",
+
+    "nx:reset": "nx reset"
   },
   "workspaces": [
     "apps/*",
