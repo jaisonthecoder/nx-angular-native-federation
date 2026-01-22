@@ -26,18 +26,17 @@
       },
       "defaultConfiguration": "production"
     },
-    "serve": {
-      "executor": "@angular-architects/native-federation:build",
-      "options": {
-        "target": "jul-portal:serve-original:development",
-        "buildNotifications": {
-          "enable": true
-        },
-        "rebuildDelay": 0,
-        "dev": true,
-        "port": 0
-      }
+  "serve": {
+  "executor": "@angular-architects/native-federation:build",
+  "options": {
+    "target": "jul-portal:serve-original:development",
+    "buildNotifications": {
+      "enable": true
     },
+    "rebuildDelay": 0,
+    "dev": true
+  }
+},
     "extract-i18n": {
       "executor": "@angular/build:extract-i18n",
       "options": {
